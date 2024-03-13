@@ -16,6 +16,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@todo/todo": [
+        "libs/todo/src"
+      ],
+      "@todo/todo/*": [
+        "libs/todo/src/*"
+      ]
+    }
   }
 }
