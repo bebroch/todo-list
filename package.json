@@ -1,0 +1,14 @@
+{
+    "name": "todo-list",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "format": "prettier --write \"client/**/*.ts\" \"server/**/*.ts\""
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "prettier": "^3.2.5"
+    }
+}
