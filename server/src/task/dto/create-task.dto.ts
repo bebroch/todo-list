@@ -1,3 +1,4 @@
+import { CreateTagDto } from "@todo/todo/entity/tag/dto/create-tag.dto"
 import { Type } from "class-transformer"
 import { IsArray, IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
@@ -37,6 +38,8 @@ export class CreateTaskDto {
     }
 
     public getTagData() {
-        return this.tags
+        if (!this.tags) return undefined
+
+        return this.tags.map((tag) => new CreateTagDto({ name: tag }))
     }
 }

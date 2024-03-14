@@ -4,16 +4,7 @@ import { Task as TaskRepository } from "database/entity/task.entity"
 import { Repository } from "typeorm"
 import { TagService } from "../tag/tag.service"
 import { CreateTaskDto } from "./dto/create-task.dto"
-
-type TaskType = {
-    id?: number
-    title?: string
-    description?: string
-    tags?: string[]
-    status?: string
-    created_date?: Date
-    updated_date?: Date
-}
+import { UpdateTaskDto } from "./dto/update-task.dto"
 
 @Injectable()
 export class TaskService {
@@ -38,11 +29,13 @@ export class TaskService {
 
         if (tags) await this.tagService.createMany(tags)
 
+        // TODO Сделать связь между task и tags, это нужно будет создать новый класс.
+
         const newTask = this.taskRepository.create(task.getCreateTaskData())
         return this.taskRepository.save(newTask)
     }
 
-    public async update(id: number, { title, description, tags, status }: TaskType) {}
+    public async update(id: number, { title, description, tags, status }: UpdateTaskDto) {}
 
     public async delete(id: number) {}
 }

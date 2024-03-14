@@ -2,6 +2,8 @@ import { CreateTagDto } from "../../tag/dto/create-tag.dto"
 import { Task } from "../entities/task.entity"
 
 export class CreateTaskDto extends Task {
+    protected tags?: CreateTagDto[]
+
     public getCreateTaskData() {
         return {
             title: this.title,
@@ -21,8 +23,6 @@ export class CreateTaskDto extends Task {
     }
 
     public getTagCreateData() {
-        if (!this.tags) return undefined
-
-        return this.tags.map((tag) => new CreateTagDto({ name: tag.getName() }))
+        return this.tags
     }
 }
