@@ -1,4 +1,4 @@
-import { Tag } from "@todo/todo/entity/tag/entities/tag.entity"
+import { Tag } from "@database/database/entity/tag/entities/tag.entity"
 
 export class Task {
     public readonly id?: number

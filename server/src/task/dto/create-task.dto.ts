@@ -1,4 +1,4 @@
-import { CreateTagDto } from "@todo/todo/entity/tag/dto/create-tag.dto"
+import { CreateTagDto } from "@database/database/entity/tag/dto/create-tag.dto"
 import { Type } from "class-transformer"
 import { IsArray, IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator"
 

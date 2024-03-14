@@ -1,5 +1,5 @@
+import { TaskModule as TaskModuleFromLib } from "@database/database/entity/task/task.module"
 import { Module } from "@nestjs/common"
-import { TaskModule as TaskModuleFromLib } from "@todo/todo/entity/task/task.module"
 import { TaskController } from "./task.controller"
 import { TaskService } from "./task.service"
 

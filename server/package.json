@@ -76,7 +76,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@todo/todo(|/.*)$": "<rootDir>/libs/todo/src/$1"
+      "^@todo/todo(|/.*)$": "<rootDir>/libs/todo/src/$1",
+      "^@database/database(|/.*)$": "<rootDir>/libs/database/src/$1"
     }
   }
 }
