@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common"
-import { TaskService as TaskServiceFromDB } from "@todo/todo/task/task.service"
+import { Tag } from "@todo/todo/entity/tag/entities/tag.entity"
+import { CreateTaskDto as CreateTaskDtoFromLib } from "@todo/todo/entity/task/dto/create-task.dto"
+import { TaskService as TaskServiceFromLib } from "@todo/todo/entity/task/task.service"
 import { CreateTaskDto } from "./dto/create-task.dto"
 import { UpdateTaskDto } from "./dto/update-task.dto"
 
 @Injectable()
 export class TaskService {
-    constructor(private _taskService: TaskServiceFromDB) {}
+    constructor(private _taskService: TaskServiceFromLib) {}
 
     async findMany(
         page?: number,
@@ -22,7 +24,22 @@ export class TaskService {
     }
 
     async create(createTaskDto: CreateTaskDto) {
-        return "This action adds a new task"
+        console.log(createTaskDto)
+
+        if (!(createTaskDto.date instanceof Date)) return
+
+        const tags = createTaskDto.getTagData()
+
+        const task = new CreateTaskDtoFromLib({
+            ...createTaskDto,
+            tags: tags
+                ? tags.map((tag) => {
+                      return new Tag({ name: tag })
+                  })
+                : undefined,
+        })
+
+        return this._taskService.create(task)
     }
 
     async update(id: number, updateTaskDto: UpdateTaskDto) {

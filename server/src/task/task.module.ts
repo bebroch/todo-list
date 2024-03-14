@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common"
-import { TaskModule as TaskModuleFromDB } from "@todo/todo/task/task.module"
+import { TaskModule as TaskModuleFromLib } from "@todo/todo/entity/task/task.module"
 import { TaskController } from "./task.controller"
 import { TaskService } from "./task.service"
 
 @Module({
-    imports: [TaskModuleFromDB],
+    imports: [TaskModuleFromLib],
     controllers: [TaskController],
     providers: [TaskService],
 })
