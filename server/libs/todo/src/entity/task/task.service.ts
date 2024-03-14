@@ -34,12 +34,12 @@ export class TaskService {
     public async findOne(id: number) {}
 
     public async create(task: CreateTaskDto) {
-        const tags = task.getTagData()
-        console.log(task)
+        const tags = task.getTagCreateData()
 
         if (tags) await this.tagService.createMany(tags)
 
-        return this.taskRepository.create(task.getCreateTaskData())
+        const newTask = this.taskRepository.create(task.getCreateTaskData())
+        return this.taskRepository.save(newTask)
     }
 
     public async update(id: number, { title, description, tags, status }: TaskType) {}

@@ -1,15 +1,15 @@
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
+import { Tag as TagRepository } from "database/entity/tag.entity"
 import { Repository } from "typeorm"
 import { CreateTagDto } from "./dto/create-tag.dto"
 import { UpdateTagDto } from "./dto/update-tag.dto"
-import { Tag } from "./entities/tag.entity"
 
 @Injectable()
 export class TagService {
     constructor(
-        @InjectRepository(Tag)
-        private readonly tagRepository: Repository<Tag>,
+        @InjectRepository(TagRepository)
+        private readonly tagRepository: Repository<TagRepository>,
     ) {}
 
     public async findAll() {
@@ -21,12 +21,13 @@ export class TagService {
     }
 
     public async createMany(createTagsDto: CreateTagDto[]) {
-        console.log(createTagsDto)
-        return this.tagRepository.create(createTagsDto)
+        const tags = createTagsDto.map((tag) => tag.getCreateData())
+        const newTags = this.tagRepository.create(tags)
+        return this.tagRepository.save(newTags)
     }
 
     public async createOne(createTagDto: CreateTagDto) {
-        return this.tagRepository.create(createTagDto)
+        return this.tagRepository.create(createTagDto.getCreateData())
     }
 
     public async update(id: number, updateTagDto: UpdateTagDto) {
