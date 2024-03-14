@@ -27,12 +27,12 @@ export class TaskService {
     public async create(task: CreateTaskDto) {
         const tags = task.getTagCreateData()
 
-        if (tags) await this.tagService.createMany(tags)
+        const newTask = this.taskRepository.create(task.getCreateData())
 
-        // TODO Сделать связь между task и tags, это нужно будет создать новый класс.
+        if (tags) newTask.tags = await this.tagService.createOrFindMany(tags)
 
-        const newTask = this.taskRepository.create(task.getCreateTaskData())
-        return this.taskRepository.save(newTask)
+        await this.taskRepository.save(newTask)
+        return newTask
     }
 
     public async update(id: number, { title, description, tags, status }: UpdateTaskDto) {}

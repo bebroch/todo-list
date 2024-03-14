@@ -1,13 +1,13 @@
 import { Tag } from "@todo/todo/entity/tag/entities/tag.entity"
 
 export class Task {
-    protected readonly id?: number
-    protected title: string
-    protected tags?: Tag[]
-    protected description: string
-    protected status: string
-    protected readonly created_date: Date
-    protected updated_date: Date
+    public readonly id?: number
+    public title: string
+    public tags?: Tag[]
+    public description: string
+    public status: string
+    public readonly created_date: Date
+    public updated_date: Date
 
     constructor({
         id,

@@ -16,14 +16,40 @@ export class TagService {
         return `This action returns all tag`
     }
 
-    public async findOne(id: number) {
-        return `This action returns a #${id} tag`
+    public async findMany(names: string[]) {
+        const query = this.tagRepository.createQueryBuilder("tag")
+        query.where("tag.name IN (:...names)", { names })
+        return query.getMany()
+    }
+
+    public async findOne({ id, name }: { id?: number; name?: string }) {
+        return await this.tagRepository.findOne({
+            where: { id, name },
+        })
+    }
+
+    public async createOrFindMany(createTagsDto: CreateTagDto[]) {
+        const foundTags = await this.findMany(createTagsDto.map((tag) => tag.getName()))
+        const createTagsData = foundTags
+            .filter((tag) => !tag.id)
+            .map((tag) => new CreateTagDto(tag))
+        const newTags = await this.createMany(createTagsData)
+
+        this.tagRepository.save(newTags)
+        return [...foundTags, ...newTags]
     }
 
     public async createMany(createTagsDto: CreateTagDto[]) {
-        const tags = createTagsDto.map((tag) => tag.getCreateData())
-        const newTags = this.tagRepository.create(tags)
-        return this.tagRepository.save(newTags)
+        const newTags = this.tagRepository.create(
+            createTagsDto.map((tag) => {
+                return {
+                    name: tag.getName(),
+                }
+            }),
+        )
+
+        this.tagRepository.save(newTags)
+        return newTags
     }
 
     public async createOne(createTagDto: CreateTagDto) {

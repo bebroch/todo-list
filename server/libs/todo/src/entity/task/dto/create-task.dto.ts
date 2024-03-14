@@ -2,9 +2,9 @@ import { CreateTagDto } from "../../tag/dto/create-tag.dto"
 import { Task } from "../entities/task.entity"
 
 export class CreateTaskDto extends Task {
-    protected tags?: CreateTagDto[]
+    public tags?: CreateTagDto[]
 
-    public getCreateTaskData() {
+    public getCreateData() {
         return {
             title: this.title,
             description: this.description,
