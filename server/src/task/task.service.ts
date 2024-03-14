@@ -26,17 +26,13 @@ export class TaskService {
     async create(createTaskDto: CreateTaskDto) {
         console.log(createTaskDto)
 
-        if (!(createTaskDto.date instanceof Date)) return
-
         const tags = createTaskDto.getTagData()
+            ? createTaskDto.getTagData().map((tag) => new Tag({ name: tag }))
+            : undefined
 
         const task = new CreateTaskDtoFromLib({
             ...createTaskDto,
-            tags: tags
-                ? tags.map((tag) => {
-                      return new Tag({ name: tag })
-                  })
-                : undefined,
+            tags,
         })
 
         return this._taskService.create(task)

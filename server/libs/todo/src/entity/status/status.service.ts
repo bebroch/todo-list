@@ -4,16 +4,16 @@ import { UpdateStatusDto } from "./dto/update-status.dto"
 
 @Injectable()
 export class StatusService {
-    create(createStatusDto: CreateStatusDto) {
-        return "This action adds a new status"
-    }
-
     findAll() {
         return `This action returns all status`
     }
 
     findOne(id: number) {
         return `This action returns a #${id} status`
+    }
+
+    create(createStatusDto: CreateStatusDto) {
+        return "This action adds a new status"
     }
 
     update(id: number, updateStatusDto: UpdateStatusDto) {
