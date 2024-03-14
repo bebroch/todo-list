@@ -9,17 +9,12 @@ import {
     Post,
     Query,
 } from "@nestjs/common"
+import { toApiRouter } from "config/api-version"
 import { CreateTaskDto } from "./dto/create-task.dto"
 import { UpdateTaskDto } from "./dto/update-task.dto"
 import { TaskService } from "./task.service"
 
-// @Query("query") query?: string, // @Query("limit") limit?: string, // @Query("page") page?: string,
-// @Query("status", new ParseArrayPipe({ items: String, separator: "," }))
-// statuses?: string[],
-// @Query("tag", new ParseArrayPipe({ items: String, separator: "," }))
-// tags?: string[],
-
-@Controller("task")
+@Controller(toApiRouter("task"))
 export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
