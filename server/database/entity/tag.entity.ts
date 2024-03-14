@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Task } from "./task.entity"
 
 @Entity("tag")
 export class Tag {
@@ -7,4 +8,8 @@ export class Tag {
 
     @Column({ type: "varchar", unique: true })
     name: string
+
+    @ManyToMany(() => Task, (task) => task.tags)
+    @JoinTable()
+    task: Task[]
 }

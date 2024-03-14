@@ -1,4 +1,4 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { Task } from "./task.entity"
 
 @Entity("user")
@@ -9,10 +9,6 @@ export class User {
     @Column({ type: "varchar", unique: true })
     login: string
 
-    @ManyToMany(() => Task)
-    @JoinTable()
-    tasks: Task[]
-
     @Column("varchar")
     password: string
 
@@ -21,4 +17,7 @@ export class User {
 
     @Column("date")
     updated_date: Date
+
+    @OneToMany(() => Task, (task) => task.user)
+    tasks: User[]
 }

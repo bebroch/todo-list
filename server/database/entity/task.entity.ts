@@ -1,5 +1,6 @@
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Tag } from "./tag.entity"
+import { User } from "./user.entity"
 
 @Entity("task")
 export class Task {
@@ -9,8 +10,7 @@ export class Task {
     @Column("varchar")
     title: string
 
-    @ManyToMany(() => Tag)
-    @JoinTable()
+    @ManyToMany(() => Tag, (tag) => tag.task)
     tags: Tag[]
 
     @Column("varchar")
@@ -27,4 +27,7 @@ export class Task {
 
     @Column("date")
     updated_date: Date
+
+    @ManyToOne(() => User, (user) => user.tasks)
+    user: User
 }
