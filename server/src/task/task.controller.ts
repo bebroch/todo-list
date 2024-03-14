@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common"
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    ParseArrayPipe,
+    Patch,
+    Post,
+    Query,
+} from "@nestjs/common"
 import { CreateTaskDto } from "./dto/create-task.dto"
 import { UpdateTaskDto } from "./dto/update-task.dto"
 import { TaskService } from "./task.service"
@@ -14,9 +24,17 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get()
-    findMany() {
-        // return this.taskService.findMany(+page, +limit, query, statuses, tags)
-        return this.taskService.findMany()
+    findMany(
+        @Query("page") page?: string,
+        @Query("limit") limit?: string,
+        @Query("query") query?: string,
+        @Query("status", new ParseArrayPipe({ items: String, separator: "," }))
+        statuses?: string[],
+        @Query("tag", new ParseArrayPipe({ items: String, separator: "," }))
+        tags?: string[],
+    ) {
+        console.log(+page, +limit, query, statuses, tags)
+        return this.taskService.findMany(+page, +limit, query, statuses, tags)
     }
 
     @Get(":id")
