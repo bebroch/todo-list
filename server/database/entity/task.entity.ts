@@ -10,7 +10,7 @@ export class Task {
     @Column("varchar")
     title: string
 
-    @ManyToMany(() => Tag, (tag) => tag.task)
+    @ManyToMany(() => Tag, (tag) => tag.task, { onDelete: "CASCADE" })
     tags: Tag[]
 
     @Column("varchar")

@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Tag as TagRepository } from "database/entity/tag.entity"
-import { Repository } from "typeorm"
+import { Tag, Tag as TagRepository } from "database/entity/tag.entity"
+import { FindOneOptions, Repository } from "typeorm"
+import { CreateOrFindTagDto } from "./dto/create-or-find.dto"
 import { CreateTagDto } from "./dto/create-tag.dto"
 import { UpdateTagDto } from "./dto/update-tag.dto"
 
@@ -16,39 +17,55 @@ export class TagService {
         return `This action returns all tag`
     }
 
-    public async findMany(names: string[]) {
+    public async findManyByName(names: string[]) {
         const query = this.tagRepository.createQueryBuilder("tag")
         query.where("tag.name IN (:...names)", { names })
         return query.getMany()
     }
 
-    public async findOne({ id, name }: { id?: number; name?: string }) {
-        return await this.tagRepository.findOne({
-            where: { id, name },
-        })
+    public async findOne(searchOptions: FindOneOptions<Tag>) {
+        return await this.tagRepository.findOne(searchOptions)
     }
 
-    public async createOrFindMany(createTagsDto: CreateTagDto[]) {
-        const foundTags = await this.findMany(createTagsDto.map((tag) => tag.getName()))
-        const createTagsData = foundTags
-            .filter((tag) => !tag.id)
-            .map((tag) => new CreateTagDto(tag))
-        const newTags = await this.createMany(createTagsData)
+    public async createOrFindMany(createTagsDto: CreateOrFindTagDto[]) {
+        // Фильтруем данные, может попасться undefined
+        // TODO возможно потом удалю
+        const tagsToFoundData = createTagsDto.filter((tag) => tag).map((tag) => tag.name)
 
-        this.tagRepository.save(newTags)
-        return [...foundTags, ...newTags]
+        // Ищем все теги по названию
+        let foundTags
+        if (tagsToFoundData && tagsToFoundData.length) {
+            foundTags = await this.findManyByName(tagsToFoundData)
+        }
+
+        // Отбираем теги, от тех, которых смогли найти, получаем те теги, которые не смогли найти
+        const createTagsData = tagsToFoundData
+            .filter((tag) => !foundTags.find((foundTag) => foundTag.name === tag))
+            .map((tag) => new CreateTagDto({ name: tag }))
+
+        // Создаём теги, которые не смогли найти
+        let newTags
+        if (createTagsData && createTagsData.length) {
+            newTags = await this.createMany(createTagsData)
+
+            // Сохраняем
+            await this.tagRepository.save(newTags)
+        }
+
+        // Может не быть foundTags или newTags, по этому такой фильтр
+        return foundTags
+            ? newTags
+                ? [...foundTags, ...newTags]
+                : foundTags
+            : newTags
+              ? newTags
+              : []
     }
 
     public async createMany(createTagsDto: CreateTagDto[]) {
-        const newTags = this.tagRepository.create(
-            createTagsDto.map((tag) => {
-                return {
-                    name: tag.getName(),
-                }
-            }),
-        )
+        const newTags = this.tagRepository.create(createTagsDto.map((tag) => tag.getCreateData()))
 
-        this.tagRepository.save(newTags)
+        await this.tagRepository.save(newTags)
         return newTags
     }
 

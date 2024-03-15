@@ -9,7 +9,7 @@ export class Tag {
     @Column({ type: "varchar", unique: true })
     name: string
 
-    @ManyToMany(() => Task, (task) => task.tags)
+    @ManyToMany(() => Task, (task) => task.tags, { onDelete: "CASCADE" })
     @JoinTable()
     task: Task[]
 }

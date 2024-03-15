@@ -1,12 +1,12 @@
 import { Tag } from "@database/database/entity/tag/entities/tag.entity"
 
 export class Task {
-    public readonly id?: number
+    public id?: number
     public title: string
     public tags?: Tag[]
     public description: string
     public status: string
-    public readonly created_date: Date
+    public created_date: Date
     public updated_date: Date
 
     constructor({

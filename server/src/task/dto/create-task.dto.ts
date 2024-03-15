@@ -28,7 +28,7 @@ export class CreateTaskDto {
     @IsDate()
     public date: Date
 
-    public getCreateTaskData() {
+    public getTaskData() {
         return {
             title: this.title,
             description: this.description,

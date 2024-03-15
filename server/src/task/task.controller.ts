@@ -28,7 +28,6 @@ export class TaskController {
         @Query("tag", new ParseArrayPipe({ items: String, separator: "," }))
         tags?: string[],
     ) {
-        console.log(+page, +limit, query, statuses, tags)
         return this.taskService.findMany(+page, +limit, query, statuses, tags)
     }
 

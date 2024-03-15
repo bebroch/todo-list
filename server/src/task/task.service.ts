@@ -1,4 +1,5 @@
 import { CreateTaskDto as CreateTaskDtoFromLib } from "@database/database/entity/task/dto/create-task.dto"
+import { UpdateTaskDto as UpdateTaskDtoFromLib } from "@database/database/entity/task/dto/update-task.dto"
 import { TaskService as TaskServiceFromLib } from "@database/database/entity/task/task.service"
 import { Injectable } from "@nestjs/common"
 import { CreateTaskDto } from "./dto/create-task.dto"
@@ -32,10 +33,15 @@ export class TaskService {
     }
 
     async update(id: number, updateTaskDto: UpdateTaskDto) {
-        return `This action updates a #${id} task`
+        const updateTask = new UpdateTaskDtoFromLib({
+            ...updateTaskDto,
+            tags: updateTaskDto.getTagData(),
+        })
+
+        return await this.taskService.updateOne(id, updateTask)
     }
 
     async remove(id: number) {
-        return `This action removes a #${id} task`
+        return await this.taskService.deleteOne(id)
     }
 }
