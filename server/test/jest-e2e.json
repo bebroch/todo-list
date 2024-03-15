@@ -1,19 +1,13 @@
 {
-  "moduleFileExtensions": [
-    "js",
-    "json",
-    "ts"
-  ],
-  "rootDir": ".",
-  "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
-  "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  },
-  "moduleNameMapper": {
-    "@todo/todo/(.*)": "<rootDir>/../libs/todo/src/$1",
-    "@todo/todo": "<rootDir>/../libs/todo/src",
-    "@database/database/(.*)": "<rootDir>/../libs/database/src/$1",
-    "@database/database": "<rootDir>/../libs/database/src"
-  }
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": ".",
+    "testEnvironment": "node",
+    "testRegex": ".e2e-spec.ts$",
+    "transform": {
+        "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "moduleNameMapper": {
+        "@database/database/(.*)": "<rootDir>/../libs/database/src/$1",
+        "@database/database": "<rootDir>/../libs/database/src"
+    }
 }
