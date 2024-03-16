@@ -1,4 +1,12 @@
-import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
+import {
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    Entity,
+    ManyToMany,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from "typeorm"
 import { Tag } from "./tag.entity"
 import { User } from "./user.entity"
 
@@ -27,6 +35,17 @@ export class Task {
 
     @Column("date")
     updated_date: Date
+
+    @BeforeInsert()
+    updateDatesBeforeInsert() {
+        this.created_date = new Date()
+        this.updated_date = new Date()
+    }
+
+    @BeforeUpdate()
+    updateDatesBeforeUpdate() {
+        this.updated_date = new Date()
+    }
 
     @ManyToOne(() => User, (user) => user.tasks)
     user: User
