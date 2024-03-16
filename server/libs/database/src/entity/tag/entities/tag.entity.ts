@@ -1,9 +1,3 @@
-export class Tag {
-    public readonly id?: number
-    public name: string
+import { TagDatabase } from "../tag-database/entities/tag-database.entity"
 
-    constructor({ id, name }: { id?: number; name: string }) {
-        this.id = id
-        this.name = name
-    }
-}
+export class Tag extends TagDatabase {}

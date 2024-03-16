@@ -1,9 +1,3 @@
-import { Tag } from "../entities/tag.entity"
+import { CreateTagDatabaseDto } from "../tag-database/dto/create-tag-database.dto"
 
-export class CreateTagDto extends Tag {
-    public getCreateData() {
-        return {
-            name: this.name,
-        }
-    }
-}
+export class CreateTagDto extends CreateTagDatabaseDto {}

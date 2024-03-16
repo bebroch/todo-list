@@ -1,83 +1,78 @@
 import { Injectable } from "@nestjs/common"
-import { InjectRepository } from "@nestjs/typeorm"
-import { Tag, Tag as TagRepository } from "database/entity/tag.entity"
-import { FindOneOptions, Repository } from "typeorm"
+import { FindManyOptions, FindOneOptions } from "typeorm"
+import { Tag } from "../../../../../database/entity/tag.entity"
 import { CreateOrFindTagDto } from "./dto/create-or-find.dto"
 import { CreateTagDto } from "./dto/create-tag.dto"
 import { UpdateTagDto } from "./dto/update-tag.dto"
+import { TagDatabaseService } from "./tag-database/tag-database.service"
 
 @Injectable()
 export class TagService {
-    constructor(
-        @InjectRepository(TagRepository)
-        private readonly tagRepository: Repository<TagRepository>,
-    ) {}
+    constructor(private readonly tagDatabaseService: TagDatabaseService) {}
 
     public async findAll() {
-        return `This action returns all tag`
+        return await this.tagDatabaseService.findAll()
     }
 
-    public async findManyByName(names: string[]) {
-        const query = this.tagRepository.createQueryBuilder("tag")
-        query.where("tag.name IN (:...names)", { names })
-        return query.getMany()
+    public async findManyByNames(names: string[]) {
+        return await this.tagDatabaseService.findManyByNames(names)
+    }
+
+    public async findMany(searchOptions: FindManyOptions<Tag>) {
+        return await this.tagDatabaseService.findMany(searchOptions)
     }
 
     public async findOne(searchOptions: FindOneOptions<Tag>) {
-        return await this.tagRepository.findOne(searchOptions)
+        return await this.tagDatabaseService.findOne(searchOptions)
     }
 
+    // TODO Нужно будет очистить от фильтров, так как функция принимает CreateOrFindTagDto, а не undefined
+    // Нужно вне функции очищать массив от undefined или null и прочих
     public async createOrFindMany(createTagsDto: CreateOrFindTagDto[]) {
         // Фильтруем данные, может попасться undefined
         // TODO возможно потом удалю
         const tagsToFoundData = createTagsDto.filter((tag) => tag).map((tag) => tag.name)
 
+        let allTags = []
+
         // Ищем все теги по названию
-        let foundTags
         if (tagsToFoundData && tagsToFoundData.length) {
-            foundTags = await this.findManyByName(tagsToFoundData)
+            allTags = allTags.concat(await this.findManyByNames(tagsToFoundData))
         }
 
         // Отбираем теги, от тех, которых смогли найти, получаем те теги, которые не смогли найти
         const createTagsData = tagsToFoundData
-            .filter((tag) => !foundTags.find((foundTag) => foundTag.name === tag))
+            .filter((tag) => !allTags.find((foundTag) => foundTag.name === tag))
             .map((tag) => new CreateTagDto({ name: tag }))
 
         // Создаём теги, которые не смогли найти
-        let newTags
         if (createTagsData && createTagsData.length) {
-            newTags = await this.createMany(createTagsData)
-
-            // Сохраняем
-            await this.tagRepository.save(newTags)
+            const newTags = await this.createMany(createTagsData)
+            allTags = allTags.concat(newTags)
         }
 
+        // TODO ниже коммент не рабочий просто на будущее
         // Может не быть foundTags или newTags, по этому такой фильтр
-        return foundTags
-            ? newTags
-                ? [...foundTags, ...newTags]
-                : foundTags
-            : newTags
-              ? newTags
-              : []
+        return allTags
     }
 
     public async createMany(createTagsDto: CreateTagDto[]) {
-        const newTags = this.tagRepository.create(createTagsDto.map((tag) => tag.getCreateData()))
-
-        await this.tagRepository.save(newTags)
-        return newTags
+        return await this.tagDatabaseService.createMany(createTagsDto)
     }
 
     public async createOne(createTagDto: CreateTagDto) {
-        return this.tagRepository.create(createTagDto.getCreateData())
+        return await this.tagDatabaseService.createOne(createTagDto)
     }
 
     public async update(id: number, updateTagDto: UpdateTagDto) {
-        return `This action updates a #${id} tag`
+        return await this.tagDatabaseService.update(id, updateTagDto)
     }
 
-    public async remove(id: number) {
-        return `This action removes a #${id} tag`
+    public async removeMany(ids: number[]) {
+        return await this.tagDatabaseService.removeMany(ids)
+    }
+
+    public async removeOne(id: number) {
+        return await this.tagDatabaseService.removeOne(id)
     }
 }

@@ -1,7 +1,3 @@
-import { CreateTagDto } from "./create-tag.dto"
+import { UpdateTagDatabaseDto } from "../tag-database/dto/update-tag-database.dto"
 
-export class UpdateTagDto extends CreateTagDto {
-    public getUpdateData() {
-        return super.getCreateData()
-    }
-}
+export class UpdateTagDto extends UpdateTagDatabaseDto {}
