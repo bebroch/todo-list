@@ -1,16 +1,7 @@
-import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    Param,
-    ParseArrayPipe,
-    Patch,
-    Post,
-    Query,
-} from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common"
 import { toApiRouter } from "config/api-version"
 import { CreateTaskDto } from "./dto/create-task.dto"
+import { SearchTaskDto } from "./dto/search-task.dto"
 import { UpdateTaskDto } from "./dto/update-task.dto"
 import { TaskService } from "./task.service"
 
@@ -19,16 +10,9 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get()
-    findMany(
-        @Query("page") page?: string,
-        @Query("limit") limit?: string,
-        @Query("query") query?: string,
-        @Query("status", new ParseArrayPipe({ items: String, separator: "," }))
-        statuses?: string[],
-        @Query("tag", new ParseArrayPipe({ items: String, separator: "," }))
-        tags?: string[],
-    ) {
-        return this.taskService.findMany(+page, +limit, query, statuses, tags)
+    // BUG Могут быть sql инъекции
+    findMany(@Query() searchTaskDto: SearchTaskDto) {
+        return this.taskService.findMany(searchTaskDto)
     }
 
     @Get(":id")
@@ -37,11 +21,13 @@ export class TaskController {
     }
 
     @Post()
+    // BUG Могут быть sql инъекции
     create(@Body() createTaskDto: CreateTaskDto) {
         return this.taskService.create(createTaskDto)
     }
 
     @Patch(":id")
+    // BUG Могут быть sql инъекции
     update(@Param("id") id: string, @Body() updateTaskDto: UpdateTaskDto) {
         return this.taskService.update(+id, updateTaskDto)
     }

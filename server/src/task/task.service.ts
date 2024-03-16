@@ -3,20 +3,20 @@ import { UpdateTaskDto as UpdateTaskDtoFromLib } from "@database/database/entity
 import { TaskService as TaskServiceFromLib } from "@database/database/entity/task/task.service"
 import { Injectable } from "@nestjs/common"
 import { CreateTaskDto } from "./dto/create-task.dto"
+import { SearchTaskDto } from "./dto/search-task.dto"
 import { UpdateTaskDto } from "./dto/update-task.dto"
 
 @Injectable()
 export class TaskService {
     constructor(private taskService: TaskServiceFromLib) {}
 
-    async findMany(
-        page?: number,
-        limit?: number,
-        query?: string,
-        statuses?: string[],
-        tags?: string[],
-    ) {
-        return this.taskService.findAll()
+    async findMany(searchTaskDto: SearchTaskDto) {
+        const data = await this.taskService.findMany(searchTaskDto.getSearchData())
+
+        return {
+            query: searchTaskDto.getSearchData(),
+            data,
+        }
     }
 
     async findOne(id: number) {
@@ -38,10 +38,10 @@ export class TaskService {
             tags: updateTaskDto.getTagData(),
         })
 
-        return await this.taskService.updateOne(id, updateTask)
+        return await this.taskService.update(id, updateTask)
     }
 
     async remove(id: number) {
-        return await this.taskService.deleteOne(id)
+        return await this.taskService.removeOne(id)
     }
 }

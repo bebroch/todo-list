@@ -1,13 +1,8 @@
 import { Tag } from "@database/database/entity/tag/entities/tag.entity"
+import { TaskDatabase } from "../task-database/entities/task-database.entity"
 
-export class Task {
-    public id?: number
-    public title: string
+export class Task extends TaskDatabase {
     public tags?: Tag[]
-    public description: string
-    public status: string
-    public created_date: Date
-    public updated_date: Date
 
     constructor({
         id,
@@ -26,25 +21,8 @@ export class Task {
         created_date?: Date
         updated_date?: Date
     }) {
-        this.id = id
-        this.title = title
+        super({ id, title, description, status, created_date, updated_date })
         this.tags = tags
-        this.description = description
-        this.status = status
-        this.created_date = created_date || new Date()
-        this.updated_date = updated_date || new Date()
-    }
-
-    public getFullData() {
-        return {
-            id: this.id,
-            title: this.title,
-            tags: this.tags,
-            description: this.description,
-            status: this.status,
-            created_date: this.created_date,
-            updated_date: this.updated_date,
-        }
     }
 
     public getTagData() {

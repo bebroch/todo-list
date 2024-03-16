@@ -1,37 +1,13 @@
 import { CreateTagDto } from "../../tag/dto/create-tag.dto"
+import { CreateTaskDatabaseDto } from "../task-database/dto/create-task-database.dto"
+import { CreateTaskConstructor } from "./types/create-task.type"
 
-type CreateTaskConstructor = {
-    title: string
-    tags: CreateTagDto[]
-    description: string
-    status: string
-}
-
-export class CreateTaskDto {
-    public title: string
+export class CreateTaskDto extends CreateTaskDatabaseDto {
     public tags?: CreateTagDto[]
-    public description: string
-    public status: string
-    public created_date: Date
-    public updated_date: Date
 
     constructor({ title, tags, description, status }: CreateTaskConstructor) {
-        this.title = title
+        super({ title, description, status })
         this.tags = tags
-        this.description = description
-        this.status = status
-        this.created_date = new Date()
-        this.updated_date = new Date()
-    }
-
-    public getCreateData() {
-        return {
-            title: this.title,
-            description: this.description,
-            status: this.status,
-            created_date: this.created_date,
-            updated_date: this.updated_date,
-        }
     }
 
     public getTagCreateDto() {
