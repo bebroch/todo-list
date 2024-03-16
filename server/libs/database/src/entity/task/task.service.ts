@@ -12,6 +12,7 @@ export class TaskService {
     ) {}
 
     public async findAll() {
+        // TODO сделать конфиг {page:number, limit:number, sort: string}
         return await this.taskDatabaseService.findAll()
     }
 
