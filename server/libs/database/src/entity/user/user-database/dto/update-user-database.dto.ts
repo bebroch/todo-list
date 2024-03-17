@@ -1,4 +1,27 @@
-import { PartialType } from "@nestjs/mapped-types"
-import { CreateUserDatabaseDto } from "./create-user-database.dto"
+import { Task } from "@database-config/entity/task.entity"
 
-export class UpdateUserDatabaseDto extends PartialType(CreateUserDatabaseDto) {}
+type UpdateUserDatabaseConstructor = {
+    login?: string
+    password?: string
+    tasks?: Task[]
+}
+
+export class UpdateUserDatabaseDto {
+    public login?: string
+    public password?: string
+    public tasks?: Task[]
+
+    constructor({ login, password, tasks }: UpdateUserDatabaseConstructor) {
+        this.login = login
+        this.password = password
+        this.tasks = tasks
+    }
+
+    public getUpdateData() {
+        return {
+            login: this.login,
+            password: this.password,
+            tasks: this.tasks,
+        }
+    }
+}

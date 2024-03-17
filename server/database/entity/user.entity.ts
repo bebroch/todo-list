@@ -1,4 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import {
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    DeleteDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from "typeorm"
 import { Task } from "./task.entity"
 
 @Entity("user")
@@ -19,5 +27,19 @@ export class User {
     updated_date: Date
 
     @OneToMany(() => Task, (task) => task.user)
-    tasks: User[]
+    tasks: Task[]
+
+    @DeleteDateColumn()
+    deletedAt?: Date
+
+    @BeforeInsert()
+    setCreatedDate() {
+        this.created_date = new Date()
+        this.updated_date = new Date()
+    }
+
+    @BeforeUpdate()
+    setUpdatedDate() {
+        this.updated_date = new Date()
+    }
 }
