@@ -22,6 +22,7 @@ export class Task extends TaskDatabase {
         updated_date?: Date
     }) {
         super({ id, title, description, status, created_date, updated_date })
+        // TODO сделать валидацию для tags
         this.tags = tags
     }
 
