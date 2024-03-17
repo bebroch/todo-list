@@ -1,16 +1,21 @@
 {
-    "moduleFileExtensions": ["js", "json", "ts"],
-    "rootDir": ".",
-    "testEnvironment": "node",
-    "testRegex": ".e2e-spec.ts$",
-    "transform": {
-        "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "moduleNameMapper": {
-        "@database/database/(.*)": "<rootDir>/../libs/database/src/$1",
-        "@database/database": "<rootDir>/../libs/database/src",
-
-        "@database-config/(.*)": "<rootDir>/../../database/$1",
-        "@database-config": "<rootDir>/../../database"
-    }
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "ts"
+  ],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-spec.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "moduleNameMapper": {
+    "@database/database/(.*)": "<rootDir>/../libs/database/src/$1",
+    "@database/database": "<rootDir>/../libs/database/src",
+    "@database-config/(.*)": "<rootDir>/../../database/$1",
+    "@database-config": "<rootDir>/../../database",
+    "@jwt/jwt/(.*)": "<rootDir>/../libs/jwt/src/$1",
+    "@jwt/jwt": "<rootDir>/../libs/jwt/src"
+  }
 }
