@@ -10,7 +10,6 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get()
-    // BUG Могут быть sql инъекции
     findMany(@Query() searchTaskDto: SearchTaskDto) {
         return this.taskService.findMany(searchTaskDto)
     }
@@ -21,13 +20,11 @@ export class TaskController {
     }
 
     @Post()
-    // BUG Могут быть sql инъекции
     create(@Body() createTaskDto: CreateTaskDto) {
         return this.taskService.create(createTaskDto)
     }
 
     @Patch(":id")
-    // BUG Могут быть sql инъекции
     update(@Param("id") id: string, @Body() updateTaskDto: UpdateTaskDto) {
         return this.taskService.update(+id, updateTaskDto)
     }
