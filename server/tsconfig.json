@@ -19,7 +19,10 @@
         "noFallthroughCasesInSwitch": false,
         "paths": {
             "@database/database": ["libs/database/src"],
-            "@database/database/*": ["libs/database/src/*"]
+            "@database/database/*": ["libs/database/src/*"],
+
+            "@database-config": ["database"],
+            "@database-config/*": ["database/*"]
         }
     }
 }

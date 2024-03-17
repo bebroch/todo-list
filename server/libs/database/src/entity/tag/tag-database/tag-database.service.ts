@@ -1,6 +1,6 @@
+import { Tag } from "@database-config/entity/tag.entity"
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Tag } from "database/entity/tag.entity"
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm"
 import { CreateTagDatabaseDto } from "./dto/create-tag-database.dto"
 import { UpdateTagDatabaseDto } from "./dto/update-tag-database.dto"

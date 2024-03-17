@@ -8,6 +8,9 @@
     },
     "moduleNameMapper": {
         "@database/database/(.*)": "<rootDir>/../libs/database/src/$1",
-        "@database/database": "<rootDir>/../libs/database/src"
+        "@database/database": "<rootDir>/../libs/database/src",
+
+        "@database-config/(.*)": "<rootDir>/../../database/$1",
+        "@database-config": "<rootDir>/../../database"
     }
 }

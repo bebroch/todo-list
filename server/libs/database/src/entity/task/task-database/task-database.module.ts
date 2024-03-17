@@ -1,6 +1,6 @@
+import { Task } from "@database-config/entity/task.entity"
 import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
-import { Task } from "database/entity/task.entity"
 import { TaskDatabaseService } from "./task-database.service"
 
 @Module({

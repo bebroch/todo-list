@@ -1,6 +1,6 @@
+import { Tag } from "@database-config/entity/tag.entity"
 import { Module } from "@nestjs/common"
 import { TypeOrmModule } from "@nestjs/typeorm"
-import { Tag } from "database/entity/tag.entity"
 import { TagDatabaseService } from "./tag-database.service"
 
 @Module({
