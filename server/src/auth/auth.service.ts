@@ -1,26 +1,43 @@
+import { User as UserFromDatabase } from "@database-config/entity/user.entity"
+import { UserService } from "@database/database/entity/user/user.service"
+import { JwtService } from "@jwt/jwt"
 import { Injectable } from "@nestjs/common"
-import { CreateAuthDto } from "./dto/create-auth.dto"
-import { UpdateAuthDto } from "./dto/update-auth.dto"
+import { AuthDto } from "./dto/auth.dto"
 
 @Injectable()
 export class AuthService {
-    create(createAuthDto: CreateAuthDto) {
-        return "This action adds a new auth"
+    constructor(
+        private readonly userService: UserService,
+        private readonly jwtService: JwtService,
+    ) {}
+
+    public async login(authDto: AuthDto) {
+        const foundUser = await this.userService.findByLogin(authDto.login)
+        await authDto.validateToLogin(foundUser)
+
+        const user = await this.returnUserFields(foundUser)
+        const token = await this.jwtService.issueTokenPair({ id: foundUser.id })
+
+        return { user, token }
     }
 
-    findAll() {
-        return `This action returns all auth`
+    public async register(authDto: AuthDto) {
+        const foundUser = await this.userService.findByLogin(authDto.login)
+        await authDto.validateToRegister(foundUser)
+
+        const createUserDto = await authDto.getCreateUserDto()
+        const createdUser = await this.userService.create(createUserDto)
+
+        const user = await this.returnUserFields(createdUser)
+        const token = await this.jwtService.issueTokenPair({ id: createdUser.id })
+
+        return { user, token }
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} auth`
-    }
-
-    update(id: number, updateAuthDto: UpdateAuthDto) {
-        return `This action updates a #${id} auth`
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} auth`
+    private async returnUserFields(user: UserFromDatabase) {
+        return {
+            id: user.id,
+            login: user.login,
+        }
     }
 }
