@@ -19,16 +19,6 @@ export class UserDatabaseService {
         return await this.find({ relations: ["tasks"] })
     }
 
-    // Поиск пользователей по id
-    public async findById(id: number) {
-        return await this.find({ where: { id } })
-    }
-
-    // Поиск пользователей по логину
-    public async findByLogin(login: string) {
-        return await this.find({ where: { login } })
-    }
-
     // Поиск пользователей по searchOptions
     public async find(searchOptions?: FindManyOptions<User>) {
         return await this.userRepository.find(searchOptions)

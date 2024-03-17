@@ -16,6 +16,10 @@ export class UserService {
         return await this.userDatabaseService.findOne({ where: { id }, relations: ["tasks"] })
     }
 
+    public async findByLogin(login: string) {
+        return await this.userDatabaseService.findOne({ where: { login }, relations: ["tasks"] })
+    }
+
     public async create(createUserDto: CreateUserDto) {
         const newUser = await this.userDatabaseService.create(createUserDto)
         await this.userDatabaseService.save(newUser)
