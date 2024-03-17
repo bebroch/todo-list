@@ -15,4 +15,8 @@ describe("JwtService", () => {
     it("should be defined", () => {
         expect(service).toBeDefined()
     })
+
+    it("should be defined", async () => {
+        expect(await service.compare("", "")).toEqual({})
+    })
 })
