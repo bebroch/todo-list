@@ -20,7 +20,7 @@ export class TaskService {
     }
 
     async findOne(id: number) {
-        return `This action returns a #${id} task`
+        return await this.taskService.findOne(id)
     }
 
     async create(createTaskDto: CreateTaskDto) {

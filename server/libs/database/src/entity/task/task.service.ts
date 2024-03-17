@@ -72,6 +72,10 @@ export class TaskService {
         return await queryBuilder.leftJoinAndSelect("task.tags", "tags").getMany()
     }
 
+    public async findOne(id: number) {
+        return await this.taskDatabaseService.findOne({ where: { id }, relations: ["tags"] })
+    }
+
     public async create(task: CreateTaskDto) {
         const tags = task.getTagCreateData()
         const newTask = await this.taskDatabaseService.create(task)
@@ -103,15 +107,18 @@ export class TaskService {
 
     public async update(id: number, updateTaskDto: UpdateTaskDto) {
         const tags = updateTaskDto.getTagUpdateData()
-        const updatedInfo = await this.taskDatabaseService.update(id, updateTaskDto)
+        const { affected } = await this.taskDatabaseService.update(id, updateTaskDto)
+        const task = await this.findOne(id)
 
-        if (tags && updatedInfo.affected === 1) {
-            const task = await this.taskDatabaseService.findOne({ where: { id } })
+        if (tags && affected === 1) {
             task.tags = await this.tagService.createOrFindMany(tags)
             await this.taskDatabaseService.save(task)
         }
 
-        return updatedInfo
+        return {
+            affected,
+            task,
+        }
     }
 
     public async removeMany(ids: number[]) {
