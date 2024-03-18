@@ -1,5 +1,5 @@
-import { CreateTaskDto as CreateTaskDtoFromLib } from "@database/database/entity/task/dto/create-task.dto"
-import { UpdateTaskDto as UpdateTaskDtoFromLib } from "@database/database/entity/task/dto/update-task.dto"
+import { CreateTaskDto as CreateTaskDtoFromLib } from "@database/database/entity/task/dto/create/create-task.dto"
+import { UpdateTaskDto as UpdateTaskDtoFromLib } from "@database/database/entity/task/dto/update/update-task.dto"
 import { TaskService as TaskServiceFromLib } from "@database/database/entity/task/task.service"
 import { Injectable } from "@nestjs/common"
 import { CreateTaskDto } from "./dto/create-task.dto"
