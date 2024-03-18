@@ -15,4 +15,8 @@ export class JwtService {
 
         return { accessToken }
     }
+
+    public async verify(token: string) {
+        return this.jwtService.verify(token)
+    }
 }

@@ -1,7 +1,7 @@
 import { User } from "@database-config/entity/user.entity"
 import { CreateUserDto } from "@database/database/entity/user/dto/create-user.dto"
 import { BadRequestException, UnauthorizedException } from "@nestjs/common"
-import { compare, genSaltSync, hash } from "bcrypt-ts"
+import { compare, genSaltSync, hash } from "bcryptjs"
 import { IsString, MinLength } from "class-validator"
 
 export class AuthDto {
