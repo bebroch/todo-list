@@ -1,3 +1,12 @@
+type TaskDatabaseConstructor = {
+    id?: number
+    title?: string
+    description?: string
+    status?: string
+    created_date?: Date
+    updated_date?: Date
+}
+
 export class TaskDatabase {
     public id?: number
     public title: string
@@ -13,20 +22,13 @@ export class TaskDatabase {
         status,
         created_date,
         updated_date,
-    }: {
-        id?: number
-        title: string
-        description: string
-        status: string
-        created_date?: Date
-        updated_date?: Date
-    }) {
+    }: TaskDatabaseConstructor) {
         this.id = id
         this.title = title
         this.description = description
         this.status = status
-        this.created_date = created_date || new Date()
-        this.updated_date = updated_date || new Date()
+        this.created_date = created_date
+        this.updated_date = updated_date
     }
 
     public getFullData() {
