@@ -10,7 +10,7 @@ import { UpdateTaskDto } from "./dto/update-task.dto"
 export class TaskService {
     constructor(private taskService: TaskServiceFromLib) {}
 
-    async findMany(searchTaskDto: SearchTaskDto) {
+    async findMany(searchTaskDto: SearchTaskDto, userId: number) {
         const data = await this.taskService.findMany(searchTaskDto.getSearchData())
 
         return {
@@ -19,11 +19,11 @@ export class TaskService {
         }
     }
 
-    async findOne(id: number) {
+    async findOne(id: number, userId: number) {
         return await this.taskService.findOne(id)
     }
 
-    async create(createTaskDto: CreateTaskDto) {
+    async create(createTaskDto: CreateTaskDto, userId: number) {
         const task = new CreateTaskDtoFromLib({
             ...createTaskDto,
             tags: createTaskDto.getTagData(),
@@ -32,7 +32,7 @@ export class TaskService {
         return this.taskService.create(task)
     }
 
-    async update(id: number, updateTaskDto: UpdateTaskDto) {
+    async update(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
         const updateTask = new UpdateTaskDtoFromLib({
             ...updateTaskDto,
             tags: updateTaskDto.getTagData(),
@@ -41,7 +41,7 @@ export class TaskService {
         return await this.taskService.update(id, updateTask)
     }
 
-    async remove(id: number) {
+    async remove(id: number, userId: number) {
         return await this.taskService.removeOne(id)
     }
 }
