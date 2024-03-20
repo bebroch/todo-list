@@ -16,7 +16,7 @@ import { UpdateTaskDto } from "./dto/update-task.dto"
 @Injectable()
 export class TaskService {
     constructor(
-        private taskService: TaskServiceFromLib,
+        private readonly taskService: TaskServiceFromLib,
         private readonly userService: UserService,
     ) {}
 
@@ -31,7 +31,7 @@ export class TaskService {
     }
 
     async findOne(id: number, userId: number) {
-        const task = await this.taskService.findOne(id)
+        const task = await this.taskService.findById(id)
 
         this.validateTask(task, userId)
 
@@ -40,7 +40,7 @@ export class TaskService {
 
     async create(createTaskDto: CreateTaskDto, userId: number) {
         const user = await this.userService.findById(userId)
-        if (!user) return undefined
+        if (!user) throw new UnauthorizedException()
 
         const task = new CreateTaskDtoFromLib({
             ...createTaskDto,
@@ -51,35 +51,39 @@ export class TaskService {
         return this.taskService.create(task)
     }
 
-    async update(id: number, updateTaskDto: UpdateTaskDto, userId: number) {
+    async update(id: number, userId: number, updateTaskDto: UpdateTaskDto) {
+        const user = await this.userService.findById(userId)
+        const task = await this.taskService.findById(id)
+
+        this.validateTask(task, user.id)
+
         const updateTask = new UpdateTaskDtoFromLib({
             ...updateTaskDto,
             tags: updateTaskDto.getTagData(),
+            user,
         })
 
         return await this.taskService.update(id, updateTask)
     }
 
     async remove(id: number, userId: number) {
-        const task = await this.taskService.findOne(id)
+        const task = await this.taskService.findById(id)
         this.validateTask(task, userId)
         await this.taskService.removeOne(task.id)
         return { deletedItems: 1, task }
     }
 
     private validateTask(task: Task, userId: number) {
-        console.log(task)
         if (!task) {
             throw new NotFoundException("Task not found")
         }
 
         if (!task.user) {
-            console.log("Task not has user")
             throw new UnprocessableEntityException("Task not has user")
         }
 
         if (task.user.id !== userId) {
-            throw new UnauthorizedException("Task is not assigned to the current user")
+            throw new UnauthorizedException("Task do not belong to user")
         }
     }
 }

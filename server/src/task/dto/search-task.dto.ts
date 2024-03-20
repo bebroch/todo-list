@@ -32,7 +32,7 @@ export class SearchTaskDto {
 
     public getSearchData(userId: number) {
         // HACK потом уберу, когда выше todo сделаю
-        if (this.limit < 0) this.limit = 0
+        if (this.limit < 1) this.limit = 1
         if (this.limit > 20) this.limit = 20
 
         return new SearchTaskDtoFromLib({
