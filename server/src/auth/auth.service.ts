@@ -16,9 +16,9 @@ export class AuthService {
         await authDto.validateToLogin(foundUser)
 
         const user = await this.returnUserFields(foundUser)
-        const token = await this.jwtService.issueTokenPair({ id: foundUser.id })
+        const accessToken = await this.jwtService.issueTokenPair({ id: foundUser.id })
 
-        return { user, token }
+        return { user, accessToken }
     }
 
     public async register(authDto: AuthDto) {
@@ -29,9 +29,9 @@ export class AuthService {
         const createdUser = await this.userService.create(createUserDto)
 
         const user = await this.returnUserFields(createdUser)
-        const token = await this.jwtService.issueTokenPair({ id: createdUser.id })
+        const accessToken = await this.jwtService.issueTokenPair({ id: createdUser.id })
 
-        return { user, token }
+        return { user, accessToken }
     }
 
     private async returnUserFields(user: UserFromDatabase) {

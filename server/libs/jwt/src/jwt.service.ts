@@ -9,14 +9,12 @@ export class JwtService {
         data: Record<string, any>,
         expiresInMilliseconds?: string | number,
     ) {
-        const accessToken = await this.jwtService.signAsync(data, {
+        return await this.jwtService.signAsync(data, {
             expiresIn: expiresInMilliseconds || "10d",
         })
-
-        return { accessToken }
     }
 
     public async verify(token: string) {
-        return this.jwtService.verify(token)
+        return await this.jwtService.verifyAsync(token)
     }
 }
