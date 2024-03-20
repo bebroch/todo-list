@@ -2,7 +2,7 @@ import { Task } from "@database-config/entity/task.entity"
 import { Test, TestingModule } from "@nestjs/testing"
 import { CreateTagDto } from "../tag/dto/create-tag.dto"
 import { TagService } from "../tag/tag.service"
-import { CreateTaskDto } from "./dto/create-task.dto"
+import { CreateTaskDto } from "./dto/create/create-task.dto"
 import { TaskDatabaseService } from "./task-database/task-database.service"
 import { TaskService } from "./task.service"
 

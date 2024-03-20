@@ -1,18 +1,20 @@
+import { User } from "@database-config/entity/user.entity"
 import { CreateTaskDatabaseConstructor } from "./types/create-task-database.type"
 
 export class CreateTaskDatabaseDto {
     public title: string
     public description: string
     public status: string
-    public created_date: Date
-    public updated_date: Date
+    public user: User
 
-    constructor({ title, description, status }: CreateTaskDatabaseConstructor) {
+    constructor({ title, description, status, user }: CreateTaskDatabaseConstructor) {
+        if (!title || !description || !status || !user)
+            throw new Error("title or description or status or userId is required")
+
         this.title = title
         this.description = description
         this.status = status
-        this.created_date = new Date()
-        this.updated_date = new Date()
+        this.user = user
     }
 
     public getCreateData() {
@@ -20,8 +22,7 @@ export class CreateTaskDatabaseDto {
             title: this.title,
             description: this.description,
             status: this.status,
-            created_date: this.created_date,
-            updated_date: this.updated_date,
+            user: this.user,
         }
     }
 }

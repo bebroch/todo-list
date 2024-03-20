@@ -1,7 +1,7 @@
-import { CreateOrFindTagDto } from "../../tag/dto/create-or-find.dto"
-import { UpdateTagDto } from "../../tag/dto/update-tag.dto"
-import { UpdateTaskDatabaseDto } from "../task-database/dto/update-task-database.dto"
-import { UpdateTaskConstructor } from "./types/update-task.type"
+import { CreateOrFindTagDto } from "../../../tag/dto/create-or-find.dto"
+import { UpdateTagDto } from "../../../tag/dto/update-tag.dto"
+import { UpdateTaskDatabaseDto } from "../../task-database/dto/update-task-database.dto"
+import { UpdateTaskConstructor } from "./update-task.type"
 
 export class UpdateTaskDto extends UpdateTaskDatabaseDto {
     public tags?: UpdateTagDto[]

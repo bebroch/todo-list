@@ -1,16 +1,16 @@
+import { Task as TaskRepository } from "@database-config/entity/task.entity"
 import { Injectable } from "@nestjs/common"
 import { InjectRepository } from "@nestjs/typeorm"
 import { FindManyOptions, FindOneOptions, Repository } from "typeorm"
 import { Tag } from "../../tag/entities/tag.entity"
-import { Task } from "../entities/task.entity"
 import { CreateTaskDatabaseDto } from "./dto/create-task-database.dto"
 import { UpdateTaskDatabaseDto } from "./dto/update-task-database.dto"
 
 @Injectable()
 export class TaskDatabaseService {
     constructor(
-        @InjectRepository(Task)
-        private readonly taskRepository: Repository<Task>,
+        @InjectRepository(TaskRepository)
+        private readonly taskRepository: Repository<TaskRepository>,
     ) {}
 
     // Выдаёт все таски
@@ -55,20 +55,20 @@ export class TaskDatabaseService {
     }
 
     // Поиск тасков по searchOptions
-    public async find(searchOptions: FindManyOptions<Task>) {
+    public async find(searchOptions: FindManyOptions<TaskRepository>) {
         return await this.taskRepository.find(searchOptions)
     }
 
     // Поиск одного таска по searchOptions
-    public async findOne(searchOptions: FindOneOptions<Task>) {
+    public async findOne(searchOptions: FindOneOptions<TaskRepository>) {
         return await this.taskRepository.findOne(searchOptions)
     }
 
     public async create(createTaskDatabaseDto: CreateTaskDatabaseDto) {
+        console.log(createTaskDatabaseDto.getCreateData())
         const newTask = this.taskRepository.create(createTaskDatabaseDto.getCreateData())
-        // await this.taskRepository.save(newTask)
+        console.log(newTask)
         return await this.taskRepository.save(newTask)
-        // return newTask
     }
 
     public async update(id: number, updateTaskDatabaseDto: UpdateTaskDatabaseDto) {
@@ -84,7 +84,7 @@ export class TaskDatabaseService {
     }
 
     // TODO Task идёт из типа который стоит выше этого файла
-    public async save(task: Task) {
+    public async save(task: TaskRepository) {
         return await this.taskRepository.save(task)
     }
 

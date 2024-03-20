@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common"
 import { TagService } from "../tag/tag.service"
-import { CreateTaskDto } from "./dto/create-task.dto"
-import { UpdateTaskDto } from "./dto/update-task.dto"
+import { CreateTaskDto } from "./dto/create/create-task.dto"
+import { SearchTaskDto } from "./dto/search/search-task.dto"
+import { UpdateTaskDto } from "./dto/update/update-task.dto"
 import { TaskDatabaseService } from "./task-database/task-database.service"
 
 @Injectable()
@@ -16,28 +17,24 @@ export class TaskService {
         return await this.taskDatabaseService.findAll()
     }
 
-    public async findMany({
-        page,
-        limit,
-        query,
-        statuses,
-        tags,
-    }: {
-        page?: number
-        limit?: number
-        query?: string
-        statuses?: string[]
-        tags?: string[]
-    }) {
+    public async findMany(searchTaskDto: SearchTaskDto) {
         let queryBuilder = this.taskDatabaseService.getQueryBuilder()
 
+        const user = searchTaskDto.user
+
+        if (!user) return []
+
+        queryBuilder = queryBuilder.andWhere("task.userId = :userId", { userId: user.id })
+
         // Пагинация
-        if (page && limit) {
+        if (searchTaskDto.isPagination()) {
+            const { page, limit } = searchTaskDto.paginationData()
             queryBuilder = queryBuilder.skip((page - 1) * limit).take(limit)
         }
 
         // Поиск по тексту
-        if (query) {
+        if (searchTaskDto.isSearchOnText()) {
+            const { query } = searchTaskDto.searchOnTextData()
             queryBuilder = queryBuilder.andWhere(
                 "(task.title LIKE :query OR task.description LIKE :query)",
                 { query: `%${query}%` },
@@ -45,14 +42,16 @@ export class TaskService {
         }
 
         // Фильтр по статусам
-        if (statuses && statuses.length) {
+        if (searchTaskDto.isFilterOnStatus()) {
+            const { statuses } = searchTaskDto.filterOnStatusData()
             queryBuilder = queryBuilder.andWhere("task.status IN (:...statuses)", {
                 statuses,
             })
         }
 
         // Фильтр по тегам
-        if (tags && tags.length) {
+        if (searchTaskDto.isFilterOnTags()) {
+            const { tags } = searchTaskDto.filterOnTagsData()
             const foundTags = await this.tagService.findManyByNames(tags)
 
             if (!foundTags.length) return []
@@ -73,36 +72,20 @@ export class TaskService {
     }
 
     public async findOne(id: number) {
-        return await this.taskDatabaseService.findOne({ where: { id }, relations: ["tags"] })
+        return await this.taskDatabaseService.findOne({
+            where: { id },
+            relations: ["tags", "user"],
+        })
     }
 
     public async create(task: CreateTaskDto) {
-        const tags = task.getTagCreateData()
         const newTask = await this.taskDatabaseService.create(task)
 
+        const tags = task.getTagCreateData()
         if (tags) newTask.tags = await this.tagService.createOrFindMany(tags)
 
         await this.taskDatabaseService.save(newTask)
         return newTask
-    }
-
-    public async updateMany(ids: number[], updateTasksDto: UpdateTaskDto[]) {
-        // const tasksData = updateTasksDto.map((task) => task.getUpdateData())
-        // return await this.taskRepository.update(ids, tasksData)
-        // const tags = updateTasksDto.
-        // const newTask = this.taskRepository.create(task.getCreateData())
-        // if (tags) newTask.tags = await this.tagService.createOrFindMany(tags)
-        // await this.taskRepository.save(newTask)
-        // return newTask
-        //
-        // return await this.taskRepository.update(ids, updates)
-        // return await this.taskRepository
-        //     .createQueryBuilder()
-        //     .update(Task)
-        //     .set(updateTasksDto)
-        //     .whereInIds(ids)
-        //     .execute()
-        // return await this.taskRepository.update(ids, updateTasksDto)
     }
 
     public async update(id: number, updateTaskDto: UpdateTaskDto) {
@@ -115,10 +98,7 @@ export class TaskService {
             await this.taskDatabaseService.save(task)
         }
 
-        return {
-            affected,
-            task,
-        }
+        return { affected, task }
     }
 
     public async removeMany(ids: number[]) {
