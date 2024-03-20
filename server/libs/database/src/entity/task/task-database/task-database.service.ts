@@ -65,9 +65,7 @@ export class TaskDatabaseService {
     }
 
     public async create(createTaskDatabaseDto: CreateTaskDatabaseDto) {
-        console.log(createTaskDatabaseDto.getCreateData())
         const newTask = this.taskRepository.create(createTaskDatabaseDto.getCreateData())
-        console.log(newTask)
         return await this.taskRepository.save(newTask)
     }
 

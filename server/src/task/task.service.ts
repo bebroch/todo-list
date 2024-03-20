@@ -55,6 +55,7 @@ export class TaskService {
         const user = await this.userService.findById(userId)
         const task = await this.taskService.findById(id)
 
+        // Проверка на то, что задача принадлежит пользователю
         this.validateTask(task, user.id)
 
         const updateTask = new UpdateTaskDtoFromLib({

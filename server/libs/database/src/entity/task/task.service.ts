@@ -71,7 +71,7 @@ export class TaskService {
         return await queryBuilder.leftJoinAndSelect("task.tags", "tags").getMany()
     }
 
-    public async findOne(id: number) {
+    public async findById(id: number) {
         return await this.taskDatabaseService.findOne({
             where: { id },
             relations: ["tags", "user"],
@@ -88,11 +88,22 @@ export class TaskService {
         return newTask
     }
 
+    // OPTIMIZE Слишком много запросов к БД.
+    // Сначала мы ищем task, потом делаем его update
+    // Можно сделать поиск task, обновить в функции, а потом сохранить его
+    // Как раз в конце функции есть await this.taskDatabaseService.save(task)
     public async update(id: number, updateTaskDto: UpdateTaskDto) {
-        const tags = updateTaskDto.getTagUpdateData()
-        const { affected } = await this.taskDatabaseService.update(id, updateTaskDto)
-        const task = await this.findOne(id)
+        const task = await this.findById(id)
+        if (!task) throw new Error("Task not found")
+        // FIXME не знаю нужна ли эта проверка
+        // Можно и удалить
+        if (task.user.id !== updateTaskDto.user.id) throw new Error("Task do not belong to user")
 
+        // Обновление задачи
+        const { affected } = await this.taskDatabaseService.update(id, updateTaskDto)
+
+        // Обновление тегов задачи
+        const tags = updateTaskDto.getTagUpdateData()
         if (tags && affected === 1) {
             task.tags = await this.tagService.createOrFindMany(tags)
             await this.taskDatabaseService.save(task)
