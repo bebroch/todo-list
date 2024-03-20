@@ -2,6 +2,7 @@ import {
     BeforeInsert,
     BeforeUpdate,
     Column,
+    DeleteDateColumn,
     Entity,
     ManyToMany,
     ManyToOne,
@@ -35,6 +36,9 @@ export class Task {
 
     @Column("date")
     updated_date: Date
+
+    @DeleteDateColumn()
+    deletedAt?: Date
 
     @BeforeInsert()
     updateDatesBeforeInsert() {
