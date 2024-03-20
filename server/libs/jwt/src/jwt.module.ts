@@ -5,7 +5,7 @@ import { JwtService } from "./jwt.service"
 @Module({
     imports: [
         JwtModuleFromNest.register({
-            secret: process.env.JWT_SECRET_KEY || "jwt_secret",
+            secret: process.env.JWT_SECRET_KEY || "jwt_secret_key",
             signOptions: { expiresIn: "1w" }, // Необязательно: время истечения токена
         }),
     ],
