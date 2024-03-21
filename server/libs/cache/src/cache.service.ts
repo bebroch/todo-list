@@ -20,7 +20,7 @@ export class CacheService {
         return cacheData.data
     }
 
-    async set(key: string, value: unknown) {
+    async set(key: string, value: unknown, ttl: number = 60) {
         let writeValue: string
 
         function toStringify(type: string) {
@@ -40,7 +40,7 @@ export class CacheService {
                 writeValue = toStringify("")
         }
 
-        return await this.redis.set(key, Buffer.from(writeValue))
+        return await this.redis.set(key, Buffer.from(writeValue), "EX", ttl)
     }
 
     async del(key: string) {
