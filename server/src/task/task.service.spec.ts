@@ -1,4 +1,4 @@
-import { CacheModule } from "@cache/cache"
+import { CacheService } from "@cache/cache"
 import { Tag } from "@database/database/entity/tag/entities/tag.entity"
 import { Task } from "@database/database/entity/task/entities/task.entity"
 import { TaskService as TaskServiceFromLib } from "@database/database/entity/task/task.service"
@@ -22,12 +22,13 @@ describe("TaskService", () => {
     let service: TaskService
     let userServiceMock: UserService
     let taskServiceMock: TaskServiceFromLib
+    let cacheServiceMock: CacheService
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
             // FIXME Нужно будет замоковать redis
             // Для теста придётся включать redis
-            imports: [CacheModule],
+            // imports: [CacheModule],
             providers: [
                 TaskService,
                 {
@@ -54,12 +55,21 @@ describe("TaskService", () => {
                         removeOne: jest.fn(),
                     },
                 },
+                {
+                    provide: CacheService,
+                    useValue: {
+                        get: jest.fn(),
+                        set: jest.fn(),
+                        del: jest.fn(),
+                    },
+                },
             ],
         }).compile()
 
         service = module.get<TaskService>(TaskService)
         userServiceMock = module.get<UserService>(UserService)
         taskServiceMock = module.get<TaskServiceFromLib>(TaskServiceFromLib)
+        cacheServiceMock = module.get<CacheService>(CacheService)
     })
 
     it("should be defined", () => {
@@ -137,6 +147,7 @@ describe("TaskService", () => {
         })
     })
 
+    // FIXME исправить тест, из за cacheRedis перестал работать
     describe("test findOne", () => {
         let user: User
         let task: Task
@@ -176,24 +187,30 @@ describe("TaskService", () => {
         })
 
         it("task not found test", async () => {
-            ;(taskServiceMock.findById as jest.Mock).mockResolvedValue(undefined)
+            const mockData = undefined
+            ;(taskServiceMock.findById as jest.Mock).mockResolvedValue(mockData)
+            ;(cacheServiceMock.get as jest.Mock).mockResolvedValue(mockData)
             const result = service.findOne(tagData.id, user.id)
 
             await expect(result).rejects.toThrow(NotFoundException)
         })
 
         it("task not has user test", async () => {
-            ;(taskServiceMock.findById as jest.Mock).mockResolvedValue({ ...task, user: undefined })
+            const mockData = { ...task, user: undefined }
+            ;(taskServiceMock.findById as jest.Mock).mockResolvedValue(mockData)
+            ;(cacheServiceMock.get as jest.Mock).mockResolvedValue(mockData)
             const result = service.findOne(task.id, user.id)
 
             await expect(result).rejects.toThrow(UnprocessableEntityException)
         })
 
         it("task do not belong to user test", async () => {
-            ;(taskServiceMock.findById as jest.Mock).mockResolvedValue({
+            const mockData = {
                 ...task,
                 user: { ...user, id: user.id + 1 },
-            })
+            }
+            ;(taskServiceMock.findById as jest.Mock).mockResolvedValue(mockData)
+            ;(cacheServiceMock.get as jest.Mock).mockResolvedValue(mockData)
             const result = service.findOne(task.id, user.id)
 
             await expect(result).rejects.toThrow(UnauthorizedException)
