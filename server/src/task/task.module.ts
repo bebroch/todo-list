@@ -1,3 +1,4 @@
+import { CacheModule } from "@cache/cache"
 import { TaskModule as TaskModuleFromLib } from "@database/database/entity/task/task.module"
 import { UserModule } from "@database/database/entity/user/user.module"
 import { JwtModule } from "@jwt/jwt"
@@ -7,7 +8,7 @@ import { TaskController } from "./task.controller"
 import { TaskService } from "./task.service"
 
 @Module({
-    imports: [TaskModuleFromLib, JwtModule, UserModule],
+    imports: [TaskModuleFromLib, JwtModule, UserModule, CacheModule],
     controllers: [TaskController],
     providers: [TaskService, JwtAuthGuard],
 })

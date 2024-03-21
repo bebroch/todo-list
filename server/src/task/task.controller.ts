@@ -1,3 +1,4 @@
+import { CacheInterceptor, CacheKey, CacheTTL } from "@nestjs/cache-manager"
 import {
     Body,
     Controller,
@@ -9,6 +10,7 @@ import {
     Query,
     Req,
     UseGuards,
+    UseInterceptors,
 } from "@nestjs/common"
 import { toApiRouter } from "config/api-version"
 import { JwtAuthGuard } from "src/guards/jwt-auth/jwt-auth.guard"
@@ -23,11 +25,17 @@ export class TaskController {
     constructor(private readonly taskService: TaskService) {}
 
     @Get()
+    @UseInterceptors(CacheInterceptor)
+    @CacheTTL(30)
+    @CacheKey("task.findMany")
     findMany(@Query() searchTaskDto: SearchTaskDto, @Req() req) {
         return this.taskService.findMany(searchTaskDto, req.userId as number)
     }
 
     @Get(":id")
+    @UseInterceptors(CacheInterceptor)
+    @CacheTTL(30)
+    @CacheKey("task.findOne")
     findOne(@Param("id") id: string, @Req() req) {
         return this.taskService.findOne(+id, req.userId as number)
     }

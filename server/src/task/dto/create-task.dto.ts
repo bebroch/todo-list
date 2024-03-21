@@ -1,6 +1,5 @@
 import { CreateTagDto } from "@database/database/entity/tag/dto/create-tag.dto"
-import { Type } from "class-transformer"
-import { IsArray, IsDate, IsNotEmpty, IsOptional, IsString } from "class-validator"
+import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator"
 
 export class CreateTaskDto {
     @IsNotEmpty()
@@ -20,20 +19,11 @@ export class CreateTaskDto {
     @IsString()
     public status: string
 
-    // @IsNotEmpty()
-    // // @IsRFC3339()
-    // @IsDate()
-    // @Type(() => Date)
-    @Type(() => Date)
-    @IsDate()
-    public date: Date
-
     public getTaskData() {
         return {
             title: this.title,
             description: this.description,
             status: this.status,
-            date: this.date,
         }
     }
 
