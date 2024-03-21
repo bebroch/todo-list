@@ -16,6 +16,8 @@
     "@database-config/(.*)": "<rootDir>/../../database/$1",
     "@database-config": "<rootDir>/../../database",
     "@jwt/jwt/(.*)": "<rootDir>/../libs/jwt/src/$1",
-    "@jwt/jwt": "<rootDir>/../libs/jwt/src"
+    "@jwt/jwt": "<rootDir>/../libs/jwt/src",
+    "@cache/cache/(.*)": "<rootDir>/../libs/cache/src/$1",
+    "@cache/cache": "<rootDir>/../libs/cache/src"
   }
 }

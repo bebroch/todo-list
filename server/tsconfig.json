@@ -35,6 +35,12 @@
       ],
       "@jwt/jwt/*": [
         "libs/jwt/src/*"
+      ],
+      "@cache/cache": [
+        "libs/cache/src"
+      ],
+      "@cache/cache/*": [
+        "libs/cache/src/*"
       ]
     }
   }
