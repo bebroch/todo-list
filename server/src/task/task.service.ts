@@ -1,4 +1,6 @@
+import { CacheService } from "@cache/cache"
 import { Task } from "@database-config/entity/task.entity"
+import { User } from "@database-config/entity/user.entity"
 import { CreateTaskDto as CreateTaskDtoFromLib } from "@database/database/entity/task/dto/create/create-task.dto"
 import { UpdateTaskDto as UpdateTaskDtoFromLib } from "@database/database/entity/task/dto/update/update-task.dto"
 import { TaskService as TaskServiceFromLib } from "@database/database/entity/task/task.service"
@@ -18,6 +20,7 @@ export class TaskService {
     constructor(
         private readonly taskService: TaskServiceFromLib,
         private readonly userService: UserService,
+        private readonly cacheService: CacheService,
     ) {}
 
     async findMany(searchTaskDto: SearchTaskDto, userId: number) {
@@ -31,7 +34,7 @@ export class TaskService {
     }
 
     async findOne(id: number, userId: number) {
-        const task = await this.taskService.findById(id)
+        const task = await this.getTask(id)
 
         this.validateTask(task, userId)
 
@@ -39,7 +42,8 @@ export class TaskService {
     }
 
     async create(createTaskDto: CreateTaskDto, userId: number) {
-        const user = await this.userService.findById(userId)
+        const user = await this.getUser(userId)
+
         if (!user) throw new UnauthorizedException()
 
         const task = new CreateTaskDtoFromLib({
@@ -52,8 +56,8 @@ export class TaskService {
     }
 
     async update(id: number, userId: number, updateTaskDto: UpdateTaskDto) {
-        const user = await this.userService.findById(userId)
-        const task = await this.taskService.findById(id)
+        const user = await this.getUser(userId)
+        const task = await this.getTask(userId)
 
         // Проверка на то, что задача принадлежит пользователю
         this.validateTask(task, user.id)
@@ -86,5 +90,27 @@ export class TaskService {
         if (task.user.id !== userId) {
             throw new UnauthorizedException("Task do not belong to user")
         }
+    }
+
+    private async getUser(id: number) {
+        let user = (await this.cacheService.get(`user.${id}`)) as User
+
+        if (!user) {
+            user = await this.userService.findById(id)
+            await this.cacheService.set(`user.${id}`, user)
+        }
+
+        return user
+    }
+
+    private async getTask(id: number) {
+        let task = (await this.cacheService.get(`task.${id}`)) as Task
+
+        if (!task) {
+            task = await this.taskService.findById(id)
+            await this.cacheService.set(`task.${id}`, task)
+        }
+
+        return task
     }
 }

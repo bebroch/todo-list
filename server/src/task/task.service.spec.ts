@@ -1,3 +1,4 @@
+import { CacheModule } from "@cache/cache"
 import { Tag } from "@database/database/entity/tag/entities/tag.entity"
 import { Task } from "@database/database/entity/task/entities/task.entity"
 import { TaskService as TaskServiceFromLib } from "@database/database/entity/task/task.service"
@@ -24,6 +25,9 @@ describe("TaskService", () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
+            // FIXME Нужно будет замоковать redis
+            // Для теста придётся включать redis
+            imports: [CacheModule],
             providers: [
                 TaskService,
                 {
@@ -138,9 +142,9 @@ describe("TaskService", () => {
         let task: Task
         let tagData
         beforeEach(async () => {
-            const userData = { id: 1, login: "sdsad", password: "asdsad" }
+            const userData = { id: 10, login: "sdsad", password: "asdsad" }
             user = new User(userData)
-            tagData = { id: 1, name: "asdsad" }
+            tagData = { id: 100, name: "asdsad" }
             const taskData = {
                 id: 1,
                 title: "a",
@@ -173,7 +177,7 @@ describe("TaskService", () => {
 
         it("task not found test", async () => {
             ;(taskServiceMock.findById as jest.Mock).mockResolvedValue(undefined)
-            const result = service.findOne(10, user.id)
+            const result = service.findOne(tagData.id, user.id)
 
             await expect(result).rejects.toThrow(NotFoundException)
         })
