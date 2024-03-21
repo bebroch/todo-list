@@ -47,7 +47,7 @@ export class TaskService {
         if (!user) throw new UnauthorizedException()
 
         const task = new CreateTaskDtoFromLib({
-            ...createTaskDto,
+            ...createTaskDto.getTaskData(),
             tags: createTaskDto.getTagData(),
             user,
         })
