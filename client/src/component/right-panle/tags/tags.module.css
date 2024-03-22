@@ -1,0 +1,26 @@
+/* Теги */
+.tagBlock {
+    border-left: 1px solid #333;
+    width: 100%;
+    padding-left: 1em;
+    font-family: sans-serif;
+}
+
+.title {
+    margin-bottom: 0;
+}
+
+.list {
+    margin-top: 0;
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+    margin-bottom: 0.2em;
+    padding-left: 1em;
+    max-width: 100%;
+    overflow-x: auto;
+}
+.listItem {
+    word-wrap: break-word;
+    padding: 5px;
+}

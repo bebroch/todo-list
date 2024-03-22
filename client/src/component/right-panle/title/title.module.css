@@ -1,0 +1,12 @@
+/* Заголовок */
+.titleBlock {
+    color: #333;
+    /* border-left: 1px solid #333; */
+    width: 100%;
+    font-family: sans-serif;
+}
+
+.title {
+    margin-bottom: 0.2em;
+    word-wrap: break-word;
+}

@@ -1,0 +1,17 @@
+/* Статус */
+.statusBlock {
+    border-left: 1px solid #333;
+    width: max-content;
+    padding-left: 1em;
+    font-family: sans-serif;
+}
+
+.title {
+    margin-bottom: 0;
+}
+
+.status {
+    margin-top: 0;
+    margin-bottom: 0.2em;
+    padding-left: 1em;
+}

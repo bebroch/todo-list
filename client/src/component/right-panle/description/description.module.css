@@ -1,0 +1,17 @@
+/* Текст */
+.descriptionBlock {
+    border-left: 1px solid #333;
+    padding-left: 1em;
+    font-family: sans-serif;
+}
+
+.title {
+    margin-bottom: 0;
+}
+
+.description {
+    padding: 10px 0;
+    margin-top: 0;
+    font-size: 22px;
+    font-weight: 400;
+}

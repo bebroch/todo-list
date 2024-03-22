@@ -1,0 +1,64 @@
+.leftPanel {
+    background-color: #fdd;
+    min-height: 100vh;
+    padding: 0 3em;
+}
+
+/* Title */
+.titleBlock {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 1em;
+    border-bottom: 1px solid #333;
+    color: #333;
+}
+
+.title {
+    margin-bottom: 0.3em;
+    font-family: sans-serif;
+}
+
+/* ul */
+/* 
+❱ \2771
+❯ \276F
+➤ \27A4
+➥ \27A5
+*/
+.list {
+    padding-left: 0;
+    list-style-type: "\2771";
+}
+
+.listItem {
+    margin-left: -10px;
+    padding-left: 10px;
+}
+
+/* Button */
+.task {
+    font-family: sans-serif;
+    margin-bottom: 0.4em;
+    margin-right: 0.2em;
+    border-radius: 5px;
+    padding: 0.5em 0.5em;
+    transition: background-color 0.3s ease;
+
+    width: 100%;
+    background-color: #fdd;
+    border: none;
+    text-align: left;
+    color: #333;
+    cursor: pointer;
+}
+
+.task:hover {
+    background-color: #fcc;
+    color: #333;
+}
+
+.task:focus {
+    background-color: #f88;
+    color: #111;
+}

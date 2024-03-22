@@ -1,0 +1,5 @@
+.main {
+    display: grid;
+    grid-template-columns: 18em calc(100% - 18em);
+    box-sizing: border-box;
+}
